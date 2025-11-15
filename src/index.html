@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet">
+        <meta charset="UTF-8">
+        <link rel="icon" href="/images/workplace.ico">
+        <link rel="stylesheet" href="output.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>WorkSphere - Virtual Workspace</title>
+    </head>
+    <body>
+
+
+
+
+
+
+
+        <section class="w-full h-auto lg:h-screen bg-blue-50 flex flex-col  lg:flex-row ">
+         
+            <!-- WORK PLACE IMAGE  -->
+            <section class="w-full h-[40vh] lg:h-screen   py-5 flex items-center justify-center lg:order-2">
+                <section class="relative w-full h-full lg:h-auto max-w-[95%] bg-black">
+                    <img class="w-full h-full relative " src="/images/workPlace.jpg" alt="work place">
+                     <!-- places 6 -->
+
+                   
+                       <section class=" w-[38%] h-full z-10 absolute top-0 flex flex-col ">
+                           <section class=" h-[32%] flex items-center justify-center text-[9px] "><p class="text-gray-900 font-semibold text-[10px] text-center lg:text-sm  ">Salle de conférence</p> </section>
+                           <section class=" h-[68%] flex items-center justify-center text-[9px] "><p class="text-gray-900 font-semibold text-[10px] text-center lg:text-sm  ">Réception </p></section>
+                       </section>
+                       <section class="absolute top-0 right-0 flex w-[46%] h-[35%] " >
+                           <section class=" flex items-center justify-center text-[9px] w-[50%]   "> <p class="text-gray-900 font-semibold text-[9px] text-center lg:text-sm  ">Salle d’archives</p></section>
+                           <section class=" flex items-center justify-center text-[9px] z-20 w-[50%] "> <p class="text-gray-900 font-semibold text-[9px] text-center lg:text-sm  ">Salle de sécurité</p></section>
+                       </section>
+                              <section class="absolute bottom-0 right-0 flex w-[46%] h-[35%] " >
+                           <section class=" flex items-center justify-center text-[8px] w-[50%]   "> <p class="text-gray-900 font-semibold text-[10px] text-center lg:text-sm  ">Salle du personnel</p></section>
+                           <section class=" flex items-center justify-center text-[8px] z-20 w-[50%]"> <p class="text-gray-900 font-semibold text-[10px] text-center lg:text-sm  ">Salle des serveurs</p></section>
+                       </section>
+                     
+                 
+            </section>
+             </section>
+
+
+
+
+
+
+
+
+
+            <!-- USERS SECTION -->
+            <section
+                class="w-full h-screen bg-white p-4 flex flex-col gap-10 lg:w-[35%]">
+                <!-- SEARCH -->
+                <div
+                  class="w-full h-12 bg-gray-100 flex rounded-md border-2 border-transparent focus-within:border-gray-300 ">
+                    <input type="search"
+                        class="w-[90%] bg-transparent pl-3 outline-none"
+                        placeholder="Search...">
+                    <span onchange="search()" class="w-[10%] flex items-center justify-center cursor-pointer">
+                        <svg width="20px" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path
+                                fill="#c7cddb"
+                                d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 416C351.5 416 416 351.5 416 272C416 192.5 351.5 128 272 128C192.5 128 128 192.5 128 272C128 351.5 192.5 416 272 416z" /></svg>
+                    </span>
+                </div>
+                <!-- Workers -->
+                <section class="flex flex-col h-full gap-4  ">
+                    <!-- the Workers -->
+                    <section class="flex flex-col gap-2">
+                        <div
+                            class="flex items-center gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
+                            <div class="bg-blue-50 rounded-full p">
+                                <img class="h-12 w-12 rounded-full"
+                                    src="/images/maleUser.png" alt="maleUser" />
+                            </div>
+                            <div class>
+                                <p
+                                    class="text-sm font-semibold text-slate-700 group-hover:text-slate-900">Fakhreddine
+                                    Largou</p>
+                                <p
+                                    class="text-[.8rem] font-medium text-slate-500 group-hover:text-slate-700">FullStack
+                                    Developer</p>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
+                            <div class="bg-blue-50 rounded-full p">
+                                <img class="h-12 w-12 rounded-full"
+                                    src="/images/maleUser.png" alt="maleUser" />
+                            </div>
+                            <div class>
+                                <p
+                                    class="text-sm font-semibold text-slate-700 group-hover:text-slate-900">Fakhreddine
+                                    Largou</p>
+                                <p
+                                    class="text-[.8rem] font-medium text-slate-500 group-hover:text-slate-700">FullStack
+                                    Developer</p>
+                            </div>
+                        </div>
+                        <div
+                            class="flex items-center gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
+                            <div class="bg-blue-50 rounded-full p">
+                                <img class="h-12 w-12 rounded-full"
+                                    src="/images/maleUser.png" alt="maleUser" />
+                            </div>
+                            <div class>
+                                <p
+                                    class="text-sm font-semibold text-slate-700 group-hover:text-slate-900">Fakhreddine
+                                    Largou</p>
+                                <p
+                                    class="text-[.8rem] font-medium text-slate-500 group-hover:text-slate-700">FullStack
+                                    Developer</p>
+                            </div>
+                        </div>
+                        <!-- <div
+                            class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
+                            <img src="/images/empty.png" alt="empty">
+                        </div> -->
+                    </section>
+                    <!-- Worker button -->
+                    <button
+                        class="h-12 w-full bg-green-500 hover:bg-green-600 duration-200 text-gray-50 rounded-md flex items-center justify-center gap-1 mb-2 mt-auto">Add
+                        New Worker <span
+                            class="text-[1.2rem]">&plus;</span></button>
+                </section>
+
+            </section>
+        </section>
+
+        <!-- FORM FOR REGISTER WORKER -->
+      <section class="fixed flex items-center justify-center  top-0 left-0 w-full h-screen bg-[#00000058]  z-50 ">
+<form class="bg-white w-full max-w-[90%] h-[80vh] rounded-md px-4 py-2 flex flex-col  ">
+<h2 class="text-2xl font-semibold text-gray-800 mb-8">Registration</h2>
+<div class=" w-full flex flex-col items-center justify-center gap-2 mb-5">
+    <img class="w-24 h-24 rounded-full  " src="/images/profile.jpg" alt="maleUser" >
+    <label class="text-sm text-gray-700 font-semibold" for="image">Update</label>
+    <input class="hidden" type="file"  id="image">
+</div>
+<div class="flex gap-1">
+    <label class="flex flex-col gap-2 w-[50%]" for="firstname">
+       <p class="text-gray-600">Firstname*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md" type="text" id="firstname" placeholder="John...">
+    </label>
+        <label class="flex flex-col gap-2 w-[50%] " for="lastname">
+       <p class="text-gray-600">Lastname*</p> 
+        <input class="bg-gray-100 h-10 rounded-md pl-2 " type="text" id="lastname" placeholder="Smith...">
+    </label>
+</div>
+</form>
+      </section>
+
+        <script src="/src/main.js"></script>
+    </body>
+</html>

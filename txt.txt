@@ -1,0 +1,15 @@
+<section class="absolute">
+                       <section>
+                           <section class=" flex items-center justify-center text-[.4rem] z-10">Salle de conférence</section>
+                           <section class=" flex items-center justify-center text-[.4rem] z-20">Réception</section>
+                       </section>
+                       <section>
+                           <section class=" flex items-center justify-center text-[.4rem]   z-20">Salle d’archives</section>
+                           <section class=" flex items-center justify-center z-20">Salle de sécurité</section>
+                       </section>
+                       <section>
+                           <section class=" flex items-center justify-center text-[.4rem] z-20">Salle du personnel</section>
+                           <section class=" flex items-center justify-center text-[.4rem]z-20">Salle des serveurs</section>
+                       </section>
+                      
+                     </section> 

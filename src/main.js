@@ -1,0 +1,2 @@
+let workers = []
+let posts = []
