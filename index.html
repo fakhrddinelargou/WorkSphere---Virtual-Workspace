@@ -30,7 +30,38 @@
 
                    
                        <section class=" w-[38%] h-full z-10 absolute top-0 flex flex-col ">
-                           <section class=" h-[32%] flex items-center justify-center text-[9px] "><p class="text-gray-900 font-semibold text-[10px] text-center lg:text-sm  ">Salle de conférence</p> </section>
+                           <section class=" h-[32%] flex flex-col items-center justify-center text-[9px] "><p class="text-gray-900 font-semibold text-[10px] text-center lg:text-sm  ">Salle de conférence</p> 
+                        <div class=" flex flex-col gap-2  overflow-auto bg-black h-8">
+                            <!-- <div class="bg-white flex items-center gap-1 p-1 rounded-md  ">
+                                <img src="/images/profile.jpg" alt="profile"  class="rounded-full w-4 ">
+                                <div>
+                                    <p class="text-[.4rem] text-gray-800 font-semibold">Fakhreddine</p>
+                                    <p class="text-gray-600 font-semibold">programmer</p>
+                                </div>
+                            </div> -->
+                                                  <div class="bg-white flex items-center gap-1 p-1 rounded-md  ">
+                                <img src="/images/profile.jpg" alt="profile"  class="rounded-full w-4 ">
+                                <div>
+                                    <p class="text-[.4rem] text-gray-800 font-semibold">Fakhreddine</p>
+                                    <p class="text-gray-600 font-semibold">programmer</p>
+                                </div>
+                            </div>
+                                                  <div class="bg-white flex items-center gap-1 p-1 rounded-md  ">
+                                <img src="/images/profile.jpg" alt="profile"  class="rounded-full w-4 ">
+                                <div>
+                                    <p class="text-[.4rem] text-gray-800 font-semibold">Fakhreddine</p>
+                                    <p class="text-gray-600 font-semibold">programmer</p>
+                                </div>
+                            </div>
+                                                  <div class="bg-white flex items-center gap-1 p-1 rounded-md  ">
+                                <img src="/images/profile.jpg" alt="profile"  class="rounded-full w-4 ">
+                                <div>
+                                    <p class="text-[.4rem] text-gray-800 font-semibold">Fakhreddine</p>
+                                    <p class="text-gray-600 font-semibold">programmer</p>
+                                </div>
+                            </div>
+                        </div>
+                        </section>
                            <section class=" h-[68%] flex items-center justify-center text-[9px] "><p class="text-gray-900 font-semibold text-[10px] text-center lg:text-sm  ">Réception </p></section>
                        </section>
                        <section class="absolute top-0 right-0 flex w-[46%] h-[35%] " >
@@ -135,26 +166,71 @@
         </section>
 
         <!-- FORM FOR REGISTER WORKER -->
-      <section class="fixed flex items-center justify-center  top-0 left-0 w-full h-screen bg-[#00000058]  z-50 ">
-<form class="bg-white w-full max-w-[90%] h-[80vh] rounded-md px-4 py-2 flex flex-col  ">
-<h2 class="text-2xl font-semibold text-gray-800 mb-8">Registration</h2>
-<div class=" w-full flex flex-col items-center justify-center gap-2 mb-5">
+      <!-- <section class="fixed flex items-center justify-center  top-0 left-0 w-full h-screen  bg-[#00000058]  z-50  ">
+<form class="bg-white w-full max-w-[95%] lg:w-[40%] h-auto rounded-[1rem] px-4 py-2  flex flex-col  ">
+<h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Registratio.</h2>
+<div id="inputs">
+<div class=" w-full flex flex-col items-center justify-center gap-2 mb-8">
     <img class="w-24 h-24 rounded-full  " src="/images/profile.jpg" alt="maleUser" >
-    <label class="text-sm text-gray-700 font-semibold" for="image">Update</label>
+    <label class="text-sm text-gray-700 font-semibold flex items-center gap-1 cursor-pointer" for="image">Update <img width="10px" src="images/installIcon.png"></label>
     <input class="hidden" type="file"  id="image">
 </div>
-<div class="flex gap-1">
-    <label class="flex flex-col gap-2 w-[50%]" for="firstname">
-       <p class="text-gray-600">Firstname*</p> 
-        <input class="bg-gray-100 h-10 pl-2 rounded-md" type="text" id="firstname" placeholder="John...">
+<div class="flex gap-2 items-center mb-5">
+    <label class="flex flex-col w-[50%] " for="firstname">
+       <p class="text-gray-600 mb-2">Firstname*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1" type="text" id="firstname" placeholder="John..">
+        <p id="checkFn" class="text-red-500 text-[.6rem] ">somethink wrong</p>
     </label>
-        <label class="flex flex-col gap-2 w-[50%] " for="lastname">
-       <p class="text-gray-600">Lastname*</p> 
-        <input class="bg-gray-100 h-10 rounded-md pl-2 " type="text" id="lastname" placeholder="Smith...">
+   <label class="flex flex-col w-[50%] " for="lastname">
+       <p class="text-gray-600 mb-2">Lastname*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1" type="text" id="lastname" placeholder="Smith..">
+        <p id="checkLn" class="text-red-500 text-[.6rem] ">somethink wrong</p>
     </label>
 </div>
+<div class="mb-5">
+   
+<select id="checkOpts" class="w-full h-10 rounded-md border text-sm pl-2 outline-none" name="role" id="role">
+  <option value="Réceptionniste">Réceptionniste</option>
+  <option value="Technicien IT">Technicien IT</option>
+  <option value="Agent de sécurité">Agent de sécurité</option>
+  <option value="Manager">Manager</option>
+  <option value="Nettoyage">Nettoyage</option>
+  <option value="Autre">Autre</option>
+</select>
+
+</div>
+<div class="mb-5">
+     <label class="flex flex-col w-full " for="email">
+       <p class="text-gray-600 mb-2">Email*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1" type="email" id="email" placeholder="e.g.@gmail.com">
+        <p id="checkEm" class="text-red-500 text-[.6rem] ">somethink wrong</p>
+    </label>
+</div>
+<div>
+      <label class="flex flex-col w-full " for="number">
+       <p class="text-gray-600 mb-2">Number*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1" type="number" id="number" placeholder="06...">
+        <p id="checkNmr" class="text-red-500 text-[.6rem] ">somethink wrong</p>
+    </label>
+</div>
+    
+<div class="h-16 flex items-center ">
+    <button class="text-sm font-medium underline underline-offset-1 text-green-700 " ><span>&plus;</span> Add Expériences</button>
+</div>
+
+
+
+
+
+</div>
+
+<button class="bg-blue-700 hover:bg-blue-800 duration-200 rounded-md h-10 text-white text-sm">Submit</button>
+
+
+
+
 </form>
-      </section>
+      </section> -->
 
         <script src="/src/main.js"></script>
     </body>
