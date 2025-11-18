@@ -9,3 +9,18 @@ body{
   font-style: normal;
   background: #00000058;
 }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;        
+  background: #0db93b58;    
+}
+
+.hidden{
+    display: none;
+}
+input {
+    outline: none;
+}
+.HI{
+    height: 30rem;
+    overflow-y: auto;
+}
