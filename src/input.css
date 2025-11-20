@@ -17,10 +17,44 @@ body{
 .hidden{
     display: none;
 }
+.hdn{
+    display: none;
+}
 input {
     outline: none;
 }
 .HI{
     height: 30rem;
     overflow-y: auto;
+}
+
+.animation {
+    animation: ani 0.5s ease forwards;
+}
+
+@keyframes ani {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animationHidden{
+    animation: hidd 0.5s ease forwards;
+
+}
+
+@keyframes hidd {
+        from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20);
+    }
 }
