@@ -11,7 +11,8 @@ body{
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;        
-  background: #0db93b58;    
+  background: #0db93b58; 
+     
 }
 
 .hidden{
