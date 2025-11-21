@@ -893,6 +893,7 @@ copyWorkers = workers.filter((el) => el.role === "Technicien IT" || el.role === 
 copyWorkers = workers.filter((el) => el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage" )
 }
    const postByProfile = document.getElementById("posts-profile")
+   
 postByProfile.innerHTML=""
 
       copyWorkers.forEach((worker)=>{
@@ -927,33 +928,39 @@ postByProfile.innerHTML+=`
 `
       })
 
-      copyWorkers.forEach((el, index)=>{
+      copyWorkers.forEach((el)=>{
         const addToPost = document.getElementById(`add-${el.id}`)
         addToPost.addEventListener('click' , ()=>{
        
           if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
-            removeCardFromSalles(el ,  spaces[index])
+            removeCardFromSalles(el , space)
 }
           if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
-            removeCardFromSalles(el , "recption" )
+            removeCardFromSalles(el , space )
 }
           if(el.role === "Agent de sécurité" || el.role === "Manager" ){
-            removeCardFromSalles(el ,  "archives")
+            removeCardFromSalles(el ,  space)
 }
           if(el.role === "Manager" || el.role === "Nettoyage" ){
-            removeCardFromSalles(el ,  "personnel")
+            removeCardFromSalles(el ,  space)
 }
           if(el.role === "Technicien IT" || el.role === "Manager" || el.role === "Nettoyage"){
-            removeCardFromSalles(el ,  "serveurs")
+            removeCardFromSalles(el ,  space)
 }
           if(el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage"){
-            removeCardFromSalles(el ,  "securite")
+            removeCardFromSalles(el ,  space)
 }
 
         })
       })
 
 }
+
+
+
+
+
+
 const spaces = ["conference" , "recption" , "archives" , "securite" , "personnel" , "serveurs"]
 const btnsAdd = document.querySelectorAll(".btn-add")
 btnsAdd.forEach((el , index)=>{
