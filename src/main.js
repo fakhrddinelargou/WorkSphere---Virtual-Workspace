@@ -9,6 +9,7 @@ const postS = document.getElementById("posts");
 let workerProfile;
 let userId = 1;
 let workers = [];
+let copyWorkers = []
 let posts_conference = [];
 let posts_reception = [];
 let posts_serveurs = [];
@@ -30,12 +31,13 @@ uploadImage.onchange = () => {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  console.log(workerProfile);
+ 
+
 
   if (check) {
     validationFirstForm();
   } else {
-    console.log(firstname.value);
+    
 
     const job = document.getElementById("job");
     const company = document.getElementById("company");
@@ -85,7 +87,7 @@ form.addEventListener("submit", (event) => {
         image: workerProfile,
         role: role.value,
       };
-      console.log(newWorker);
+      
 
       workers.push(newWorker);
 
@@ -158,10 +160,10 @@ function validationFirstForm() {
   }
 
   if (ValidFirstName && ValidlastName && ValidEmail && ValidNumber) {
-    console.log(newWorker);
+
     check = false;
     addExperience.disabled = false;
-    console.log(addExperience.disabled);
+   
     if (!addExperience.disabled) {
       addExperience.style.color = "green";
     }
@@ -197,7 +199,7 @@ This field is required</p>
 }
 
 function displayWorkewrs() {
-  console.log(workers);
+
   workersContainer.innerHTML = "";
 
   workers.forEach((worker) => {
@@ -325,7 +327,7 @@ function checkPost(el) {
 function checkPostDiv(el) {
 
   const divBtn = document.getElementById(`div-worker${el.id}`);
-  console.log("btn : ", divBtn);
+  
 
   const removeCardBtn = document.getElementById(`remove-${el.id}`)
   removeCardBtn.addEventListener('click' , (e)=>{
@@ -338,7 +340,7 @@ function checkPostDiv(el) {
 
   
   divBtn.addEventListener("click", () => {
-    console.log(el);
+
     workersPosts(el);
   });
 
@@ -405,7 +407,7 @@ function workersPosts(el) {
 
 `;
   document.getElementById("closeProfile").addEventListener("click", () => {
-    console.log("eafasdfa");
+    
 
     workerPost.classList.add("hdn");
   });
@@ -432,7 +434,7 @@ function posts(el) {
       el.role === "Manager" ||
       el.role === "Nettoyage"
     ) {
-      console.log(posts_reception);
+      
       
       removeCardFromSalles(el, "reception");
     }
@@ -551,6 +553,7 @@ function removeCardFromSalles(el, salle) {
   postsPersonnel();
   postsArchives();
   displayWorkewrs();
+  postWorkersByProfile()
 }
 
 // THE CARDS THAT ARE PLACES
@@ -862,3 +865,100 @@ function postsArchives() {
   });
 }
 
+
+document.getElementById("remove").addEventListener('click' , ()=>{
+  document.getElementById("worker-post-profile").classList.add("hdn")
+})
+
+function postWorkersByProfile(space){
+  
+  console.log(space);
+  
+      if("conference" === space){
+      copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" )
+    }
+     if("recption" === space){
+copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" )
+    }
+     if("archives" === space){
+copyWorkers = workers.filter((el) => el.role === "Agent de sécurité" || el.role === "Manager" )
+    }
+     if("personnel" === space){
+copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Nettoyage" )
+    }
+     if("serveurs" === space){
+copyWorkers = workers.filter((el) => el.role === "Technicien IT" || el.role === "Manager" || el.role === "Nettoyage" )
+    }
+     if("securite" === space){
+copyWorkers = workers.filter((el) => el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage" )
+}
+   const postByProfile = document.getElementById("posts-profile")
+postByProfile.innerHTML=""
+
+      copyWorkers.forEach((worker)=>{
+postByProfile.innerHTML+=`
+
+   <div class="flex items-center  relative gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
+                            <div class="bg-blue-50 rounded-full p">
+                                <img class="h-12 w-12 rounded-full"
+                                    src=${
+                                      worker.image !== undefined
+                                        ? worker.image
+                                        : "images/profile.jpg"
+                                    } alt="maleUser" />
+                            </div>
+                            <div>
+                                <p  id="profile-${worker.id}"
+                                    class="text-sm cursor-pointer font-semibold text-slate-700 group-hover:text-slate-900">${
+                                      worker.firstname + " " + worker.lastname
+                                    }</p>
+                                <p
+                                    class="text-[.8rem] font-medium text-slate-500 group-hover:text-slate-700">${
+                                      worker.role
+                                    }</p>
+                            </div>
+                                   <div class="flex items-center gap-6 ml-auto">
+                                <div id="add-${
+                                  worker.id
+                                }" class="cursor-pointer">&plus;</div>
+
+                            </div>
+                        </div>
+`
+      })
+
+      copyWorkers.forEach((el, index)=>{
+        const addToPost = document.getElementById(`add-${el.id}`)
+        addToPost.addEventListener('click' , ()=>{
+       
+          if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
+            removeCardFromSalles(el ,  spaces[index])
+}
+          if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
+            removeCardFromSalles(el , "recption" )
+}
+          if(el.role === "Agent de sécurité" || el.role === "Manager" ){
+            removeCardFromSalles(el ,  "archives")
+}
+          if(el.role === "Manager" || el.role === "Nettoyage" ){
+            removeCardFromSalles(el ,  "personnel")
+}
+          if(el.role === "Technicien IT" || el.role === "Manager" || el.role === "Nettoyage"){
+            removeCardFromSalles(el ,  "serveurs")
+}
+          if(el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage"){
+            removeCardFromSalles(el ,  "securite")
+}
+
+        })
+      })
+
+}
+const spaces = ["conference" , "recption" , "archives" , "securite" , "personnel" , "serveurs"]
+const btnsAdd = document.querySelectorAll(".btn-add")
+btnsAdd.forEach((el , index)=>{
+  el.addEventListener('click' , ()=>{
+    postWorkersByProfile(spaces[index])
+    document.getElementById("worker-post-profile").classList.remove("hdn")
+  })
+})
