@@ -24,6 +24,15 @@ function addNewWorker() {
   formulaire.classList.remove("hdn");
 }
 
+function isEmpty(){
+    if (workers.length < 1) {
+    workersContainer.innerHTML = `  <div
+                              class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
+                              <img src="/images/empty.png" alt="empty">
+                          </div>`;
+  }
+}
+
 uploadImage.onchange = () => {
   workerProfile = URL.createObjectURL(uploadImage.files[0]);
   profile.src = workerProfile;
@@ -41,20 +50,30 @@ form.addEventListener("submit", (event) => {
 
     const job = document.getElementById("job");
     const company = document.getElementById("company");
-    const date = document.getElementById("date");
+    const date_start = document.getElementById("date_start");
+    const date_end = document.getElementById("date_end");
     let isValid = true;
 
-    if (job && company && date) {
-      const Datee = date.value.trim();
+    if (job && company && date_start && date_end) {
+      const startValue = date_start.value.trim();
+      const endValue = date_end.value.trim();
       const today = new Date();
-      const selectDate = new Date(Datee);
+      const selectDate = new Date(startValue);
 
-      if (date && Datee !== "" && selectDate >= today) {
-        document.getElementById("checkDt").classList.add("hidden");
+      if (date_start && startValue === "" || selectDate < today) {
+        document.getElementById("checkFr").classList.remove("hidden");
         isValid = false;
       } else {
-        document.getElementById("checkDt").classList.remove("hidden");
-        isValid = true;
+        document.getElementById("checkFr").classList.add("hidden");
+        // isValid = true;
+      }
+
+       if (endValue === " " || endValue <  startValue) {
+         document.getElementById("checkTo").classList.remove("hidden");
+         isValid = false;
+        } else {
+        document.getElementById("checkTo").classList.add("hidden");
+        // isValid = true;
       }
 
       if (company && company.value.length < 3) {
@@ -62,7 +81,7 @@ form.addEventListener("submit", (event) => {
         isValid = false;
       } else {
         document.getElementById("checkCp").classList.add("hidden");
-        isValid = true;
+        // isValid = true;
       }
 
       if (job && job.value.length < 3) {
@@ -70,7 +89,7 @@ form.addEventListener("submit", (event) => {
         isValid = false;
       } else {
         document.getElementById("checkJb").classList.add("hidden");
-        isValid = true;
+        // isValid = true;
       }
     }
 
@@ -83,13 +102,15 @@ form.addEventListener("submit", (event) => {
         number: number.value,
         job: job.value,
         company: company.value,
-        date: date.value,
+        date_start: date_start.value,
+        date_end: date_end.value,
         image: workerProfile,
         role: role.value,
       };
       
 
       workers.push(newWorker);
+console.log(workers);
 
       firstname.value = "";
       lastname.value = "";
@@ -97,8 +118,10 @@ form.addEventListener("submit", (event) => {
       number.value = "";
       job.value = "";
       company.value = "";
-      date.value = "";
+      date_start.value = "";
+      date_end.value = "";
       expInput.innerHTML = "";
+      role.value ="Réceptionniste"
       displayWorkewrs();
       check = true;
       form.classList.remove("animation");
@@ -186,10 +209,18 @@ This field is required</p>
 This field is required</p>
     </label>
       <label class="flex flex-col w-full mb-4" for="date">
-       <p class="text-gray-600 mb-2">Date*</p> 
-        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date">
-        <p id="checkDt" class="text-red-500 text-[.6rem] hidden">
+       <p class="text-gray-600 mb-2">From*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date_start">
+        <p id="checkFr" class="text-red-500 text-[.6rem] hidden">
 This field is required</p>
+
+    </label>
+          <label class="flex flex-col w-full mb-4" for="date">
+       <p class="text-gray-600 mb-2">To*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date_end">
+        <p id="checkTo" class="text-red-500 text-[.6rem] hidden">
+This field is required</p>
+
     </label>
     `;
   addExperience.disabled = true;
@@ -274,6 +305,9 @@ function openProfile() {
                 }</p></div>
                 <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Company : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
                   el.company
+                }</p></div>
+                      <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Period : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                  el.date_start + " To " + el.date_end
                 }</p></div>
                 <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Location : </p> <p class="w-full text-center  text-gray-500 text-sm ">Casablanca/stat</p></div>
                 </div>
@@ -361,7 +395,8 @@ function workersPosts(el) {
         <div id="rn-${el.id}" class="${
     el.role === "Réceptionniste" ||
     el.role === "Manager" ||
-    el.role === "Nettoyage"
+    el.role === "Nettoyage" ||
+      el.role === "Autre"
       ? "bg-white cursor-pointer"
       : "bg-gray-300 cursor-not-allowed"
   } h-12 rounded-md flex items-center pl-4" >Réception</div> 
@@ -423,7 +458,7 @@ function posts(el) {
   const arBtn = document.getElementById(`ar-${el.id}`);
   const lsBtn = document.getElementById(`ls-${el.id}`);
   cfBtn.addEventListener("click", () => {
-    if (el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage") {
+    if (el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"  ) {
       removeCardFromSalles(el, "conference");
     }
   });
@@ -432,7 +467,9 @@ function posts(el) {
     if (
       el.role === "Réceptionniste" ||
       el.role === "Manager" ||
-      el.role === "Nettoyage"
+      el.role === "Nettoyage" ||
+      el.role === "Autre"
+
     ) {
       
       
@@ -444,7 +481,7 @@ function posts(el) {
     if (
       el.role === "Technicien IT" ||
       el.role === "Manager" ||
-      el.role === "Nettoyage"
+      el.role === "Nettoyage" 
     ) {
       removeCardFromSalles(el, "serveurs");
     }
@@ -545,7 +582,6 @@ function removeCardFromSalles(el, salle) {
 
 
 
-
   postsConference();
   postsReception();
   postsServeurs();
@@ -554,6 +590,7 @@ function removeCardFromSalles(el, salle) {
   postsArchives();
   displayWorkewrs();
   postWorkersByProfile()
+  isEmpty()
 }
 
 // THE CARDS THAT ARE PLACES
@@ -589,17 +626,12 @@ function postsConference() {
     `;
   });
 
-  if (workers.length < 1) {
-    workersContainer.innerHTML = `  <div
-                              class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
-                              <img src="/images/empty.png" alt="empty">
-                          </div>`;
-  }
-  if (posts_conference.length > 0) {
-    document.querySelector(".bg-cf").style.backgroundColor = "transparent";
-  } else {
-    document.querySelector(".bg-cf").style.backgroundColor = "#b90d0d58";
-  }
+
+  // if (posts_conference.length > 0) {
+  //   document.querySelector(".bg-cf").style.backgroundColor = "transparent";
+  // } else {
+  //   document.querySelector(".bg-cf").style.backgroundColor = "#b90d0d58";
+  // }
   posts_conference.forEach((el) => {
     checkPostDiv(el);
   });
@@ -801,11 +833,11 @@ function postsPersonnel() {
   //                         <img src="/images/empty.png" alt="empty">
   //                     </div>`;
   // }
-  if (posts_personnel.length > 0) {
-    document.querySelector(".bg-pr").style.backgroundColor = "transparent";
-  } else {
-    document.querySelector(".bg-pr").style.backgroundColor = "#b90d0d58";
-  }
+  // if (posts_personnel.length > 0) {
+  //   document.querySelector(".bg-pr").style.backgroundColor = "transparent";
+  // } else {
+  //   document.querySelector(".bg-pr").style.backgroundColor = "#b90d0d58";
+  // }
   // displayWorkewrs();
 
   posts_personnel.forEach((el) => {
@@ -878,7 +910,8 @@ function postWorkersByProfile(space){
       copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" )
     }
      if("recption" === space){
-copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" )
+copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" ||
+      el.role === "Autre" )
     }
      if("archives" === space){
 copyWorkers = workers.filter((el) => el.role === "Agent de sécurité" || el.role === "Manager" )
@@ -932,24 +965,39 @@ postByProfile.innerHTML+=`
         const addToPost = document.getElementById(`add-${el.id}`)
         addToPost.addEventListener('click' , ()=>{
        
-          if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
+          // if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
             removeCardFromSalles(el , space)
-}
-          if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
-            removeCardFromSalles(el , space )
-}
-          if(el.role === "Agent de sécurité" || el.role === "Manager" ){
-            removeCardFromSalles(el ,  space)
-}
-          if(el.role === "Manager" || el.role === "Nettoyage" ){
-            removeCardFromSalles(el ,  space)
-}
-          if(el.role === "Technicien IT" || el.role === "Manager" || el.role === "Nettoyage"){
-            removeCardFromSalles(el ,  space)
-}
-          if(el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage"){
-            removeCardFromSalles(el ,  space)
-}
+copyWorkers = copyWorkers.filter((it) => it.id !== el.id )
+postWorkersByProfile()
+
+// }
+//           if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" ||
+//       el.role === "Autre"){
+//             removeCardFromSalles(el , space )
+// copyWorkers = copyWorkers.filter((it) => it.id !== el.id )
+// postWorkersByProfile()
+
+// }
+//           if(el.role === "Agent de sécurité" || el.role === "Manager" ){
+//             removeCardFromSalles(el ,  space)
+// copyWorkers = copyWorkers.filter((it) => it.id !== el.id )
+// postWorkersByProfile()
+// }
+//           if(el.role === "Manager" || el.role === "Nettoyage" ){
+//             removeCardFromSalles(el ,  space)
+// copyWorkers = copyWorkers.filter((it) => it.id !== el.id )
+// postWorkersByProfile()
+// }
+//           if(el.role === "Technicien IT" || el.role === "Manager" || el.role === "Nettoyage"){
+//             removeCardFromSalles(el ,  space)
+// copyWorkers = copyWorkers.filter((it) => it.id !== el.id )
+// postWorkersByProfile()
+// }
+//           if(el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage"){
+//             removeCardFromSalles(el ,  space)
+// copyWorkers = copyWorkers.filter((it) => it.id !== el.id )
+// postWorkersByProfile()
+// }
 
         })
       })
