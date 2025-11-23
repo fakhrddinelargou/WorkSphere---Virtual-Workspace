@@ -11,10 +11,7 @@ const searching = document.getElementById("searching")
 const btnsAdd = document.querySelectorAll(".btn-add");
 let userId = JSON.parse(localStorage.getItem("userId")) || 0;
 let workers = JSON.parse(localStorage.getItem("workers")) || [];
-console.log(userId);
-
 let workerProfile;
-console.log(workers);
 let copyWorkers = [];
 let posts_conference = [];
 let posts_reception = [];
@@ -32,14 +29,24 @@ uploadImage.onchange = () => {
 };
 
 searching.addEventListener("input" , (e)=>{
-  const  value = e.target.value.toLowerCase()
-  console.log(value);
-  workersContainer.innerHTML =""
-workers.forEach((el)=>{
-const isExist = el.role.toLowerCase().includes(value) || el.firstname.toLowerCase().includes(value)  
+  const value = e.target.value.toLowerCase().trim()
+  let result = workers.filter((el)=> el.role.toLowerCase().includes(value) || el.firstname.toLowerCase().includes(value)  )
 
-if(isExist){
- workersContainer.innerHTML += `
+  if(value === ""){
+    displayWorkewrs()
+  }
+
+if(result.length === 0 && value !== ""){
+     workersContainer.innerHTML = `
+       <div
+                              class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
+                              <img src="/images/empty.png" alt="empty">
+                          </div>`;
+}
+  workersContainer.innerHTML =""
+
+  result.forEach((el)=>{
+workersContainer.innerHTML += `
      <div class="flex items-center  relative gap-4 px-3 h-16 lg:h-20 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
                             <div class="bg-blue-50 rounded-full p">
                                 <img class="h-12 w-12 rounded-full"
@@ -68,15 +75,34 @@ if(isExist){
                         </div>
     
     `;
+  })  
+
+  console.log(result.length);
   
-}else if(value.trim() === ""){
-  displayWorkewrs()
-}
+  if(result.length > 0){
+result.forEach((el)=>{
+  const opnProfile = document.getElementById(`profile-${el.id}`);
+  const pst = document.getElementById(`post-${el.id}`);
+
+  opnProfile.addEventListener('click' , ()=>{
+    resultSearch(el)
+  })
+  
+ pst.addEventListener('click' , ()=>{
+  console.log("vzxcvzxvxz");
+  console.log(el);
+  
+   workersPosts(el);
+  })
 
 
-
-})  
 })
+
+  }
+
+})
+
+
 const spaces = [
   "conference",
   "reception",
@@ -179,7 +205,6 @@ form.addEventListener("submit", (event) => {
       localStorage.setItem("userId", JSON.stringify(userId));
       workers.push(newWorker);
       localStorage.setItem("workers", JSON.stringify(workers));
-      console.log(workers);
       firstname.value = "";
       lastname.value = "";
       email.value = "";
@@ -339,12 +364,8 @@ function displayWorkewrs() {
   });
 }
 
-function openProfile() {
-  workers.forEach((el) => {
-    const userProfile = document.getElementById(`profile-${el.id}`);
-    userProfile.addEventListener("click", () => {
-      document.getElementById("worker-profile").classList.remove("hdn");
-
+function resultSearch(el){
+console.log(el);
       document.getElementById("worker-profile").innerHTML = `
 
 <section id="prfl" class="relative animation bg-white w-full max-w-[95%] lg:w-[50%] h-[90vh]  rounded-xl overflow-auto  ">
@@ -392,7 +413,11 @@ function openProfile() {
         </section>
 
 `;
-
+document.getElementById("worker-profile").classList.remove("hdn");
+closeProfile()
+  removeProfile(el)
+}
+function closeProfile(){
       const closeProfile = document.getElementById("closeProfile");
       if (closeProfile) {
         closeProfile.addEventListener("click", () => {
@@ -403,8 +428,9 @@ function openProfile() {
           }, 250);
         });
       }
-
-      const removeBtn = document.getElementById(`remove-${el.id}`);
+}
+function removeProfile(el){
+        const removeBtn = document.getElementById(`remove-${el.id}`);
       removeBtn.addEventListener("click", () => {
         workers = workers.filter((item) => item.id !== el.id);
         localStorage.setItem("workers", JSON.stringify(workers));        
@@ -418,11 +444,68 @@ function openProfile() {
         </div>`;
         }
       });
+}
+function openProfile() {
+  workers.forEach((el) => {
+    const userProfile = document.getElementById(`profile-${el.id}`);
+    userProfile.addEventListener("click", () => {
+      document.getElementById("worker-profile").classList.remove("hdn");
+      document.getElementById("worker-profile").innerHTML = `
+
+<section id="prfl" class="relative animation bg-white w-full max-w-[95%] lg:w-[50%] h-[90vh]  rounded-xl overflow-auto  ">
+            <div id="closeProfile" class="absolute right-6 top-4 cursor-pointer text-gray-500 text-[1.3rem] ">&#x2716;</div>
+            <img class="w-full h-40" src="/images/bgProfile.jpg" alt="background">
+            <div class="sm:flex sm:flex-col items-center ">
+                <img class="w-24 rounded-full relative  m-auto top-[-3rem] border-4 border-white " src=${
+                  el.image !== undefined ? el.image : "/images/profile.jpg"
+                } alt="profile">
+              <div class="flex flex-col gap-6  w-full p-6">
+                <div class="flex items-center  ml-5  "><p class="w-[20%] text-sm font-bold text-gray-800">Full Name : </p> <p class=" w-full text-center text-gray-500 text-sm ">${
+                  el.firstname + " " + el.lastname
+                }</p></div>
+                <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Email : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                  el.email
+                }</p></div>
+                <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Phone : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                  el.number
+                }</p></div>
+                <div class="flex flex-col gap-6 border py-4 rounded-md">
+                <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Job : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                  el.job
+                }</p></div>
+                <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Post : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                  el.role
+                }</p></div>
+                <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Location : </p> <p class="w-full text-center  text-gray-500 text-sm ">Casablanca/stat</p></div>
+                </div>
+                <h2 class="py-2 font-semibold text-blue-950 ">Work Experience</h2>
+                <div class="flex flex-col gap-6 border py-4 rounded-md">
+                        <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Company : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                          el.company
+                        }</p></div>
+                      <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Period : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                        el.date_start + " To " + el.date_end
+                      }</p></div>
+                </div>
+                </div>
+            </div>
+                     <div class="w-full pr-4 pb-4 flex mt-12">
+                <button id="remove-${
+                  el.id
+                }" class="bg-red-600 rounded-md h-8 w-20 text-gray-50 text-sm ml-auto">remove</button>
+            </div>
+        </section>
+
+`;
+  closeProfile()
+  removeProfile(el)
     });
   });
 }
 
 function checkPost(el) {
+  console.log("sdfsafdassadsadasdasdas");
+  
   const postBtn = document.getElementById(`post-${el.id}`);
   postBtn.addEventListener("click", () => {
     workersPosts(el);
@@ -435,7 +518,7 @@ function checkPostDiv(el) {
   const removeCardBtn = document.getElementById(`remove-${el.id}`);
   removeCardBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    console.log("lala");
+
     
     removeCardFromSalles(el, "list");
     workerPost.classList.add("hdn");
@@ -945,7 +1028,7 @@ function postWorkersByProfile(space) {
   postByProfile.innerHTML = "";
   copyWorkers.forEach((worker) => {
     postByProfile.innerHTML += `
-   <div class="flex items-center  relative gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 bg-white ring-gray-50 inset-shadow-2xs">
+   <div class="flex items-center   relative gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 bg-white ring-gray-50 inset-shadow-2xs">
                             <div class="bg-blue-50 rounded-full p">
                                 <img class="h-12 w-12 rounded-full"
                                     src=${
@@ -955,7 +1038,7 @@ function postWorkersByProfile(space) {
                                     } alt="maleUser" />
                             </div>
                             <div>
-                                <p  id="profile-${worker.id}"
+                                <p  id="profile-${worker.id}-cp"
                                     class="text-sm cursor-pointer font-semibold text-slate-700 group-hover:text-slate-900">${
                                       worker.firstname + " " + worker.lastname
                                     }</p>
@@ -985,6 +1068,17 @@ function postWorkersByProfile(space) {
       }
     });
   });
+
+copyWorkers.forEach((el)=>{
+  const opnProfileCp = document.getElementById(`profile-${el.id}-cp`);
+  opnProfileCp.addEventListener('click' , ()=>{
+    console.log("fdsfdsf");
+    resultSearch(el)
+  })
+
+})
+
+  
 }
 
 function canAddToSalle(salleArray) {
@@ -1031,7 +1125,7 @@ function removeCardFromSalles(el, salle) {
         canAddToSalle(posts_reception)
       ) {
         posts_reception.push(el);
-        console.log(posts_reception);
+    
       }
       break;
     case "serveurs":
