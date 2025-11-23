@@ -5,11 +5,17 @@ const inputs = document.getElementById("inputs");
 const expInput = document.getElementById("expInput");
 const addExperience = document.getElementById("addExperience");
 const workerPost = document.getElementById("worker-post");
+const postByProfile = document.getElementById("posts-profile");
 const postS = document.getElementById("posts");
+const searching = document.getElementById("searching")
+const btnsAdd = document.querySelectorAll(".btn-add");
+let userId = JSON.parse(localStorage.getItem("userId")) || 0;
+let workers = JSON.parse(localStorage.getItem("workers")) || [];
+console.log(userId);
+
 let workerProfile;
-let userId = 1;
-let workers = [];
-let copyWorkers = []
+console.log(workers);
+let copyWorkers = [];
 let posts_conference = [];
 let posts_reception = [];
 let posts_serveurs = [];
@@ -18,43 +24,125 @@ let posts_personnel = [];
 let posts_archives = [];
 let check = true;
 let newWorker = {};
-function addNewWorker() {
-  form.classList.add("animation");
-  form.classList.remove("animationHidden");
-  formulaire.classList.remove("hdn");
-}
+displayWorkewrs();
 
 uploadImage.onchange = () => {
   workerProfile = URL.createObjectURL(uploadImage.files[0]);
   profile.src = workerProfile;
 };
 
+searching.addEventListener("input" , (e)=>{
+  const  value = e.target.value.toLowerCase()
+  console.log(value);
+  workersContainer.innerHTML =""
+workers.forEach((el)=>{
+const isExist = el.role.toLowerCase().includes(value) || el.firstname.toLowerCase().includes(value)  
+
+if(isExist){
+ workersContainer.innerHTML += `
+     <div class="flex items-center  relative gap-4 px-3 h-16 lg:h-20 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
+                            <div class="bg-blue-50 rounded-full p">
+                                <img class="h-12 w-12 rounded-full"
+                                    src=${
+                                      el.image !== undefined
+                                        ? el.image
+                                        : "images/profile.jpg"
+                                    } alt="maleUser" />
+                            </div>
+                            <div>
+                                <p  id="profile-${el.id}"
+                                    class="text-sm cursor-pointer font-semibold text-slate-700 group-hover:text-slate-900">${
+                                      el.firstname + " " + el.lastname
+                                    }</p>
+                                <p
+                                    class="text-[.8rem] font-medium text-slate-500 group-hover:text-slate-700">${
+                                      el.role
+                                    }</p>
+                            </div>
+                                   <div class="flex items-center gap-6 ml-auto">
+                                <div id="post-${
+                                  el.id
+                                }" class="cursor-pointer"><svg width="22px" fill="#334155"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M320.4 64C302.7 64 288.4 78.3 288.4 96L288.4 128L128.4 128C110.7 128 96.4 142.3 96.4 160L96.4 224C96.4 241.7 110.7 256 128.4 256L288.4 256L288.4 320L135 320C130.8 320 126.7 321.7 123.7 324.7L75.7 372.7C69.5 378.9 69.5 389.1 75.7 395.3L123.7 443.3C126.7 446.3 130.8 448 135 448L288.4 448L288.4 544C288.4 561.7 302.7 576 320.4 576C338.1 576 352.4 561.7 352.4 544L352.4 448L512.4 448C530.1 448 544.4 433.7 544.4 416L544.4 352C544.4 334.3 530.1 320 512.4 320L352.4 320L352.4 256L505.8 256C510 256 514.1 254.3 517.1 251.3L565.1 203.3C571.3 197.1 571.3 186.9 565.1 180.7L517.1 132.7C514.1 129.7 510 128 505.8 128L352.4 128L352.4 96C352.4 78.3 338.1 64 320.4 64z"/></svg></div>
+
+                            </div>
+                        </div>
+    
+    `;
+  
+}else if(value.trim() === ""){
+  displayWorkewrs()
+}
+
+
+
+})  
+})
+const spaces = [
+  "conference",
+  "reception",
+  "archives",
+  "securite",
+  "personnel",
+  "serveurs",
+];
+
+btnsAdd.forEach((el, index) => {
+  el.addEventListener("click", () => {
+    postWorkersByProfile(spaces[index]);
+    document.getElementById("worker-post-profile").classList.remove("hdn");
+  });
+});
+
+document.getElementById("remove").addEventListener("click", () => {
+  document.getElementById("worker-post-profile").classList.add("hdn");
+});
+
+function addNewWorker() {
+  form.classList.add("animation");
+  form.classList.remove("animationHidden");
+  formulaire.classList.remove("hdn");
+}
+
+function isEmpty() {
+  if (workers.length < 1) {
+    workersContainer.innerHTML = `  <div
+                              class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
+                              <img src="/images/empty.png" alt="empty">
+                          </div>`;
+  }
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
- 
-
-
   if (check) {
     validationFirstForm();
   } else {
-    
-
     const job = document.getElementById("job");
     const company = document.getElementById("company");
-    const date = document.getElementById("date");
+    const date_start = document.getElementById("date_start");
+    const date_end = document.getElementById("date_end");
     let isValid = true;
 
-    if (job && company && date) {
-      const Datee = date.value.trim();
+    if (job && company && date_start && date_end) {
+      const startValue = date_start.value.trim();
+      const endValue = date_end.value.trim();
       const today = new Date();
-      const selectDate = new Date(Datee);
+      const selectDate = new Date(startValue);
 
-      if (date && Datee !== "" && selectDate >= today) {
-        document.getElementById("checkDt").classList.add("hidden");
+      if ((date_start && startValue === "") || selectDate < today) {
+        document.getElementById("checkFr").classList.remove("hidden");
         isValid = false;
       } else {
-        document.getElementById("checkDt").classList.remove("hidden");
-        isValid = true;
+        document.getElementById("checkFr").classList.add("hidden");
+      
+      }
+
+      if (endValue === " " || endValue < startValue) {
+        document.getElementById("checkTo").classList.remove("hidden");
+        isValid = false;
+      } else {
+        document.getElementById("checkTo").classList.add("hidden");
+      
       }
 
       if (company && company.value.length < 3) {
@@ -62,7 +150,7 @@ form.addEventListener("submit", (event) => {
         isValid = false;
       } else {
         document.getElementById("checkCp").classList.add("hidden");
-        isValid = true;
+     
       }
 
       if (job && job.value.length < 3) {
@@ -70,7 +158,7 @@ form.addEventListener("submit", (event) => {
         isValid = false;
       } else {
         document.getElementById("checkJb").classList.add("hidden");
-        isValid = true;
+  
       }
     }
 
@@ -83,22 +171,27 @@ form.addEventListener("submit", (event) => {
         number: number.value,
         job: job.value,
         company: company.value,
-        date: date.value,
+        date_start: date_start.value,
+        date_end: date_end.value,
         image: workerProfile,
         role: role.value,
       };
-      
-
+      localStorage.setItem("userId", JSON.stringify(userId));
       workers.push(newWorker);
-
+      localStorage.setItem("workers", JSON.stringify(workers));
+      console.log(workers);
       firstname.value = "";
       lastname.value = "";
       email.value = "";
       number.value = "";
       job.value = "";
       company.value = "";
-      date.value = "";
+      date_start.value = "";
+      date_end.value = "";
       expInput.innerHTML = "";
+      // workerProfile=[]
+      // profile.src = "images/profile.jpg";
+      role.value = "Réceptionniste";
       displayWorkewrs();
       check = true;
       form.classList.remove("animation");
@@ -117,6 +210,7 @@ document.getElementById("closeForm").addEventListener("click", () => {
     formulaire.classList.add("hdn");
   }, 250);
 });
+
 function validationFirstForm() {
   const profile = document.getElementById("profile");
   const uploadImage = document.getElementById("uploadImage");
@@ -160,10 +254,9 @@ function validationFirstForm() {
   }
 
   if (ValidFirstName && ValidlastName && ValidEmail && ValidNumber) {
-
     check = false;
     addExperience.disabled = false;
-   
+
     if (!addExperience.disabled) {
       addExperience.style.color = "green";
     }
@@ -186,10 +279,18 @@ This field is required</p>
 This field is required</p>
     </label>
       <label class="flex flex-col w-full mb-4" for="date">
-       <p class="text-gray-600 mb-2">Date*</p> 
-        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date">
-        <p id="checkDt" class="text-red-500 text-[.6rem] hidden">
+       <p class="text-gray-600 mb-2">From*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date_start">
+        <p id="checkFr" class="text-red-500 text-[.6rem] hidden">
 This field is required</p>
+
+    </label>
+          <label class="flex flex-col w-full mb-4" for="date">
+       <p class="text-gray-600 mb-2">To*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date_end">
+        <p id="checkTo" class="text-red-500 text-[.6rem] hidden">
+This field is required</p>
+
     </label>
     `;
   addExperience.disabled = true;
@@ -199,12 +300,11 @@ This field is required</p>
 }
 
 function displayWorkewrs() {
-
   workersContainer.innerHTML = "";
 
   workers.forEach((worker) => {
     workersContainer.innerHTML += `
-     <div class="flex items-center  relative gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
+     <div class="flex items-center  relative gap-4 px-3 h-16 lg:h-20 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
                             <div class="bg-blue-50 rounded-full p">
                                 <img class="h-12 w-12 rounded-full"
                                     src=${
@@ -233,7 +333,6 @@ function displayWorkewrs() {
     
     `;
   });
-
   openProfile();
   workers.forEach((el) => {
     checkPost(el);
@@ -248,7 +347,7 @@ function openProfile() {
 
       document.getElementById("worker-profile").innerHTML = `
 
-<section id="prfl" class="relative animation bg-white w-full max-w-[95%] lg:w-[50%] rounded-xl overflow-hidden  ">
+<section id="prfl" class="relative animation bg-white w-full max-w-[95%] lg:w-[50%] h-[90vh]  rounded-xl overflow-auto  ">
             <div id="closeProfile" class="absolute right-6 top-4 cursor-pointer text-gray-500 text-[1.3rem] ">&#x2716;</div>
             <img class="w-full h-40" src="/images/bgProfile.jpg" alt="background">
             <div class="sm:flex sm:flex-col items-center ">
@@ -272,10 +371,16 @@ function openProfile() {
                 <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Post : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
                   el.role
                 }</p></div>
-                <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Company : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
-                  el.company
-                }</p></div>
                 <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Location : </p> <p class="w-full text-center  text-gray-500 text-sm ">Casablanca/stat</p></div>
+                </div>
+                <h2 class="py-2 font-semibold text-blue-950 ">Work Experience</h2>
+                <div class="flex flex-col gap-6 border py-4 rounded-md">
+                        <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Company : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                          el.company
+                        }</p></div>
+                      <div class="flex items-center  ml-5 "><p class=" w-[20%] text-sm font-bold text-gray-800">Period : </p> <p class="w-full text-center  text-gray-500 text-sm ">${
+                        el.date_start + " To " + el.date_end
+                      }</p></div>
                 </div>
                 </div>
             </div>
@@ -302,6 +407,8 @@ function openProfile() {
       const removeBtn = document.getElementById(`remove-${el.id}`);
       removeBtn.addEventListener("click", () => {
         workers = workers.filter((item) => item.id !== el.id);
+        localStorage.setItem("workers", JSON.stringify(workers));        
+        localStorage.setItem("userId", JSON.stringify(userId-1));
         displayWorkewrs();
         document.getElementById("worker-profile").classList.add("hdn");
         if (workers.length < 1) {
@@ -315,7 +422,6 @@ function openProfile() {
   });
 }
 
-
 function checkPost(el) {
   const postBtn = document.getElementById(`post-${el.id}`);
   postBtn.addEventListener("click", () => {
@@ -323,27 +429,21 @@ function checkPost(el) {
   });
 }
 
-
 function checkPostDiv(el) {
-
   const divBtn = document.getElementById(`div-worker${el.id}`);
-  
 
-  const removeCardBtn = document.getElementById(`remove-${el.id}`)
-  removeCardBtn.addEventListener('click' , (e)=>{
-      e.stopPropagation();
-    removeCardFromSalles(el , "list")
+  const removeCardBtn = document.getElementById(`remove-${el.id}`);
+  removeCardBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    console.log("lala");
+    
+    removeCardFromSalles(el, "list");
     workerPost.classList.add("hdn");
-
-
-  })
-
-  
-  divBtn.addEventListener("click", () => {
-
-    workersPosts(el);
   });
 
+  divBtn.addEventListener("click", () => {
+    workersPosts(el);
+  });
 }
 
 function workersPosts(el) {
@@ -352,7 +452,9 @@ function workersPosts(el) {
 
            <div id="closeProfile" class=" absolute right-2 top-1 cursor-pointer text-gray-500 text-[1.3rem] ">&#x2716;</div>
         <div id="cf-${el.id}" class="${
-    el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"
+    el.role === "Manager" ||
+    el.role === "Réceptionniste" ||
+    el.role === "Nettoyage"
       ? "bg-white cursor-pointer "
       : "bg-gray-300 cursor-not-allowed"
   } h-12 rounded-md flex items-center pl-4">Salle de conférence</div> 
@@ -361,7 +463,8 @@ function workersPosts(el) {
         <div id="rn-${el.id}" class="${
     el.role === "Réceptionniste" ||
     el.role === "Manager" ||
-    el.role === "Nettoyage"
+    el.role === "Nettoyage" ||
+    el.role === "Autre"
       ? "bg-white cursor-pointer"
       : "bg-gray-300 cursor-not-allowed"
   } h-12 rounded-md flex items-center pl-4" >Réception</div> 
@@ -407,8 +510,6 @@ function workersPosts(el) {
 
 `;
   document.getElementById("closeProfile").addEventListener("click", () => {
-    
-
     workerPost.classList.add("hdn");
   });
   posts(el);
@@ -423,7 +524,11 @@ function posts(el) {
   const arBtn = document.getElementById(`ar-${el.id}`);
   const lsBtn = document.getElementById(`ls-${el.id}`);
   cfBtn.addEventListener("click", () => {
-    if (el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage") {
+    if (
+      el.role === "Manager" ||
+      el.role === "Réceptionniste" ||
+      el.role === "Nettoyage"
+    ) {
       removeCardFromSalles(el, "conference");
     }
   });
@@ -432,10 +537,9 @@ function posts(el) {
     if (
       el.role === "Réceptionniste" ||
       el.role === "Manager" ||
-      el.role === "Nettoyage"
+      el.role === "Nettoyage" ||
+      el.role === "Autre"
     ) {
-      
-      
       removeCardFromSalles(el, "reception");
     }
   });
@@ -474,89 +578,6 @@ function posts(el) {
   });
 }
 
-function removeCardFromSalles(el, salle) {
-
-
-
-
-  if (salle !== "conference" && posts_conference.length <= 3) {
-    posts_conference = posts_conference.filter((rm) => rm.id !== el.id);
-  }
-  if (salle !== "reception") {
-    posts_reception = posts_reception.filter((rm) => rm.id !== el.id);
-  }
-  if (salle !== "serveurs") {
-    posts_serveurs = posts_serveurs.filter((rm) => rm.id !== el.id);
-  }
-  if (salle !== "securite") {
-    posts_securite = posts_securite.filter((rm) => rm.id !== el.id);
-  }
-  if (salle !== "personnel") {
-    posts_personnel = posts_personnel.filter((rm) => rm.id !== el.id);
-  }
-  if (salle !== "archives") {
-    posts_archives = posts_archives.filter((rm) => rm.id !== el.id);
-  }
-  if (salle !== "list") {
-    workers = workers.filter((ls) => ls.id !== el.id);
-  }
-
-
-
-
-
-    switch (salle) {
-    case "conference":
-      if (!posts_conference.some((item) => item.id === el.id) && posts_conference.length <= 3) {
-        posts_conference.push(el);
-      }
-      break;
-    case "reception":
-      if (!posts_reception.some((item) => item.id === el.id) && posts_conference.length <= 3) {
-        posts_reception.push(el);
-      }
-      break;
-    case "serveurs":
-      if (!posts_serveurs.some((item) => item.id === el.id) && posts_conference.length <= 3) {
-        posts_serveurs.push(el);
-      }
-      break;
-    case "securite":
-      if (!posts_securite.some((item) => item.id === el.id) && posts_conference.length <= 3) {
-        posts_securite.push(el);
-      }
-      break;
-    case "personnel": 
-      if (!posts_personnel.some((item) => item.id === el.id) && posts_conference.length <= 3) {
-        posts_personnel.push(el);
-      }
-      break;
-    case "archives":
-      if (!posts_archives.some((item) => item.id === el.id) && posts_conference.length <= 3) {
-        posts_archives.push(el);
-      }
-      break;
-    case "list":
-      if (!workers.some((item) => item.id === el.id)) {
-        workers.push(el);
-      }
-  }
-
-
-
-
-
-  postsConference();
-  postsReception();
-  postsServeurs();
-  postsSecurite();
-  postsPersonnel();
-  postsArchives();
-  displayWorkewrs();
-  postWorkersByProfile()
-}
-
-// THE CARDS THAT ARE PLACES
 function postsConference() {
   const cfSpace = document.getElementById("cf-space");
   cfSpace.innerHTML = "";
@@ -589,17 +610,11 @@ function postsConference() {
     `;
   });
 
-  if (workers.length < 1) {
-    workersContainer.innerHTML = `  <div
-                              class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
-                              <img src="/images/empty.png" alt="empty">
-                          </div>`;
-  }
-  if (posts_conference.length > 0) {
-    document.querySelector(".bg-cf").style.backgroundColor = "transparent";
-  } else {
-    document.querySelector(".bg-cf").style.backgroundColor = "#b90d0d58";
-  }
+  // if (posts_conference.length > 0) {
+  //   document.querySelector(".bg-cf").style.backgroundColor = "transparent";
+  // } else {
+  //   document.querySelector(".bg-cf").style.backgroundColor = "#b90d0d58";
+  // }
   posts_conference.forEach((el) => {
     checkPostDiv(el);
   });
@@ -617,7 +632,9 @@ function postsReception() {
      <div id="div-worker${
        el.id
      }" class="bg-white flex relative items-center gap-1 p-1 rounded-md  ">
-      <div id="remove-${el.id}" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
+      <div id="remove-${
+        el.id
+      }" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
 
                                 <img src=${
                                   el.image !== undefined
@@ -670,7 +687,9 @@ function postsServeurs() {
      <div id="div-worker${
        el.id
      }" class="bg-white flex items-center relative gap-1 p-1 rounded-md  ">
-      <div id="remove-${el.id}" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
+      <div id="remove-${
+        el.id
+      }" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
 
                                 <img src=${
                                   el.image !== undefined
@@ -721,7 +740,9 @@ function postsSecurite() {
      <div id="div-worker${
        el.id
      }" class="bg-white relative flex items-center gap-1 p-1 rounded-md  ">
-      <div id="remove-${el.id}" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
+      <div id="remove-${
+        el.id
+      }" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
 
                                 <img src=${
                                   el.image !== undefined
@@ -773,7 +794,9 @@ function postsPersonnel() {
      <div id="div-worker${
        el.id
      }" class="bg-white relative flex items-center gap-1 p-1 rounded-md  ">
-      <div id="remove-${el.id}" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
+      <div id="remove-${
+        el.id
+      }" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
 
                                 <img src=${
                                   el.image !== undefined
@@ -801,11 +824,11 @@ function postsPersonnel() {
   //                         <img src="/images/empty.png" alt="empty">
   //                     </div>`;
   // }
-  if (posts_personnel.length > 0) {
-    document.querySelector(".bg-pr").style.backgroundColor = "transparent";
-  } else {
-    document.querySelector(".bg-pr").style.backgroundColor = "#b90d0d58";
-  }
+  // if (posts_personnel.length > 0) {
+  //   document.querySelector(".bg-pr").style.backgroundColor = "transparent";
+  // } else {
+  //   document.querySelector(".bg-pr").style.backgroundColor = "#b90d0d58";
+  // }
   // displayWorkewrs();
 
   posts_personnel.forEach((el) => {
@@ -825,7 +848,9 @@ function postsArchives() {
      <div id="div-worker${
        el.id
      }" class="bg-white relative flex items-center gap-1 p-1 rounded-md  ">
-      <div id="remove-${el.id}" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
+      <div id="remove-${
+        el.id
+      }" class=" absolute right-2 top-1 cursor-pointer text-gray-500  ">&#x2716;</div>
 
                                 <img src=${
                                   el.image !== undefined
@@ -865,41 +890,62 @@ function postsArchives() {
   });
 }
 
-
-document.getElementById("remove").addEventListener('click' , ()=>{
-  document.getElementById("worker-post-profile").classList.add("hdn")
-})
-
-function postWorkersByProfile(space){
-  
-  console.log(space);
-  
-      if("conference" === space){
-      copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" )
+function postWorkersByProfile(space) {
+  let isExist = false;
+  if (space)
+    if ("conference" === space && canAddToSalle(posts_conference)) {
+      isExist = true;
+      copyWorkers = workers.filter(
+        (el) =>
+          el.role === "Manager" ||
+          el.role === "Réceptionniste" ||
+          el.role === "Nettoyage"
+      );
     }
-     if("recption" === space){
-copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage" )
-    }
-     if("archives" === space){
-copyWorkers = workers.filter((el) => el.role === "Agent de sécurité" || el.role === "Manager" )
-    }
-     if("personnel" === space){
-copyWorkers = workers.filter((el) => el.role === "Manager" || el.role === "Nettoyage" )
-    }
-     if("serveurs" === space){
-copyWorkers = workers.filter((el) => el.role === "Technicien IT" || el.role === "Manager" || el.role === "Nettoyage" )
-    }
-     if("securite" === space){
-copyWorkers = workers.filter((el) => el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage" )
-}
-   const postByProfile = document.getElementById("posts-profile")
-   
-postByProfile.innerHTML=""
-
-      copyWorkers.forEach((worker)=>{
-postByProfile.innerHTML+=`
-
-   <div class="flex items-center  relative gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
+  if ("reception" === space && canAddToSalle(posts_reception)) {
+    copyWorkers = workers.filter(
+      (el) =>
+        el.role === "Manager" ||
+        el.role === "Réceptionniste" ||
+        el.role === "Nettoyage" ||
+        el.role === "Autre"
+    );
+    isExist = true;
+  }
+  if ("archives" === space && canAddToSalle(posts_archives)) {
+    copyWorkers = workers.filter(
+      (el) => el.role === "Agent de sécurité" || el.role === "Manager"
+    );
+    isExist = true;
+  }
+  if ("personnel" === space && canAddToSalle(posts_personnel)) {
+    copyWorkers = workers.filter(
+      (el) => el.role === "Manager" || el.role === "Nettoyage"
+    );
+    isExist = true;
+  }
+  if ("serveurs" === space && canAddToSalle(posts_serveurs)) {
+    copyWorkers = workers.filter(
+      (el) =>
+        el.role === "Technicien IT" ||
+        el.role === "Manager" ||
+        el.role === "Nettoyage"
+    );
+    isExist = true;
+  }
+  if ("securite" === space && canAddToSalle(posts_securite)) {
+    copyWorkers = workers.filter(
+      (el) =>
+        el.role === "Agent de sécurité" ||
+        el.role === "Manager" ||
+        el.role === "Nettoyage"
+    );
+    isExist = true;
+  }
+  postByProfile.innerHTML = "";
+  copyWorkers.forEach((worker) => {
+    postByProfile.innerHTML += `
+   <div class="flex items-center  relative gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 bg-white ring-gray-50 inset-shadow-2xs">
                             <div class="bg-blue-50 rounded-full p">
                                 <img class="h-12 w-12 rounded-full"
                                     src=${
@@ -925,47 +971,114 @@ postByProfile.innerHTML+=`
 
                             </div>
                         </div>
-`
-      })
+`;
+  });
+  copyWorkers.forEach((el) => {
+    const addToPost = document.getElementById(`add-${el.id}`);
+    addToPost.addEventListener("click", () => {
+      if (isExist) {
+        removeCardFromSalles(el, space);
+        copyWorkers = copyWorkers.filter((it) => it.id !== el.id);
+ 
 
-      copyWorkers.forEach((el)=>{
-        const addToPost = document.getElementById(`add-${el.id}`)
-        addToPost.addEventListener('click' , ()=>{
-       
-          if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
-            removeCardFromSalles(el , space)
-}
-          if(el.role === "Manager" || el.role === "Réceptionniste" || el.role === "Nettoyage"){
-            removeCardFromSalles(el , space )
-}
-          if(el.role === "Agent de sécurité" || el.role === "Manager" ){
-            removeCardFromSalles(el ,  space)
-}
-          if(el.role === "Manager" || el.role === "Nettoyage" ){
-            removeCardFromSalles(el ,  space)
-}
-          if(el.role === "Technicien IT" || el.role === "Manager" || el.role === "Nettoyage"){
-            removeCardFromSalles(el ,  space)
-}
-          if(el.role === "Agent de sécurité" || el.role === "Manager" || el.role === "Nettoyage"){
-            removeCardFromSalles(el ,  space)
+        postWorkersByProfile(space);
+      }
+    });
+  });
 }
 
-        })
-      })
-
+function canAddToSalle(salleArray) {
+  let limit = 3;
+  return salleArray.length < limit;
 }
 
+function removeCardFromSalles(el, salle) {
+  if (salle !== "conference" ) {
+    posts_conference = posts_conference.filter((rm) => rm.id !== el.id);
+  }
+  if (salle !== "reception" ) {
+    posts_reception = posts_reception.filter((rm) => rm.id !== el.id);
+  }
+  if (salle !== "serveurs") {
+    posts_serveurs = posts_serveurs.filter((rm) => rm.id !== el.id);
+  }
+  if (salle !== "securite") {
+    posts_securite = posts_securite.filter((rm) => rm.id !== el.id);
+  }
+  if (salle !== "personnel") {
+    posts_personnel = posts_personnel.filter((rm) => rm.id !== el.id);
+  }
+  if (salle !== "archives") {
+    posts_archives = posts_archives.filter((rm) => rm.id !== el.id);
+  }
+  if (salle !== "list") {
+    workers = workers.filter((ls) => ls.id !== el.id);
+    
+  }
 
+  switch (salle) {
+    case "conference":
+      if (
+        !posts_conference.some((item) => item.id === el.id) &&
+        canAddToSalle(posts_conference)
+      ) {
+        posts_conference.push(el);
+      }
+      break;
+    case "reception":
+      if (
+        !posts_reception.some((item) => item.id === el.id) &&
+        canAddToSalle(posts_reception)
+      ) {
+        posts_reception.push(el);
+        console.log(posts_reception);
+      }
+      break;
+    case "serveurs":
+      if (
+        !posts_serveurs.some((item) => item.id === el.id) &&
+        canAddToSalle(posts_serveurs)
+      ) {
+        posts_serveurs.push(el);
+      }
+      break;
+    case "securite":
+      if (
+        !posts_securite.some((item) => item.id === el.id) &&
+        canAddToSalle(posts_securite)
+      ) {
+        posts_securite.push(el);
+      }
+      break;
+    case "personnel":
+      if (
+        !posts_personnel.some((item) => item.id === el.id) &&
+        canAddToSalle(posts_personnel)
+      ) {
+        posts_personnel.push(el);
+      }
+      break;
+    case "archives":
+      if (
+        !posts_archives.some((item) => item.id === el.id) &&
+        canAddToSalle(posts_archives)
+      ) {
+        posts_archives.push(el);
+      }
+      break;
+    case "list":
+      if (!workers.some((item) => item.id === el.id)) {
+        workers.push(el);
+      }
+  }
 
-
-
-
-const spaces = ["conference" , "recption" , "archives" , "securite" , "personnel" , "serveurs"]
-const btnsAdd = document.querySelectorAll(".btn-add")
-btnsAdd.forEach((el , index)=>{
-  el.addEventListener('click' , ()=>{
-    postWorkersByProfile(spaces[index])
-    document.getElementById("worker-post-profile").classList.remove("hdn")
-  })
-})
+  postsConference();
+  postsReception();
+  postsServeurs();
+  postsSecurite();
+  postsPersonnel();
+  postsArchives();
+  displayWorkewrs();
+  postWorkersByProfile();
+  isEmpty();
+}
