@@ -95,10 +95,11 @@
                 <!-- SEARCH -->
                 <div
                   class="w-full h-12 bg-gray-100 flex rounded-md border-2 border-transparent focus-within:border-gray-300 ">
-                    <input type="search"
+                    <input type="search" id="searching"
+
                         class="w-[90%] bg-transparent pl-3 outline-none"
                         placeholder="Search...">
-                    <span onchange="search()" class="w-[10%] flex items-center justify-center cursor-pointer">
+                    <span class="w-[10%] flex items-center justify-center cursor-pointer">
                         <svg width="20px" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path
                                 fill="#c7cddb"
@@ -108,7 +109,7 @@
                 <!-- Workers -->
                 <section class="flex flex-col h-full gap-4  ">
                     <!-- the Workers -->
-                    <section id="workersContainer" class="flex flex-col gap-2">
+                    <section id="workersContainer" class="flex flex-col h-[70vh] overflow-auto gap-2">
  <!-- <div
                             class="flex items-center gap-4 px-3 h-16 border border-gray-100 rounded-md ring-1 ring-gray-100 inset-shadow-2xs">
                             <div class="bg-blue-50 rounded-full p">
@@ -131,10 +132,7 @@
                         </div> -->
 
 <!-- EMPTY -->
-      <div
-                            class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
-                            <img src="/images/empty.png" alt="empty">
-                        </div>
+   
                     </section>
                     <!-- Worker button -->
                     <button
@@ -282,15 +280,13 @@ This field is required</p>
 
 <!-- PROFILES FOR POST -->
 
-   <section id="worker-post-profile" class="fixed flex items-center justify-center top-0 hdn left-0 w-full h-screen   bg-[#00000058]  z-50  ">
+   <section id="worker-post-profile" class="fixed flex items-center hdn justify-center top-0  left-0 w-full h-screen   bg-[#00000058]  z-50  ">
        
         <section  class="bg-gray-200 w-[90%] lg:w-[30%]  relative  rounded-xl p-2  flex flex-col gap-2">
-<h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Add Worker.</h2>
+<h2 class="text-2xl  font-semibold text-gray-800 mb-4 text-center">Add Worker.</h2>
       <div id="remove" class=" absolute right-2 top-1 cursor-pointer text-gray-500 z-50  ">&#x2716;</div>
 
-<div id="posts-profile">
-
-</div>
+<div id="posts-profile" class="flex flex-col gap-2 "></div>
         </section>
 
       </section>
