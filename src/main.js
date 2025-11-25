@@ -7,7 +7,7 @@ const addExperience = document.getElementById("addExperience");
 const workerPost = document.getElementById("worker-post");
 const postByProfile = document.getElementById("posts-profile");
 const postS = document.getElementById("posts");
-const searching = document.getElementById("searching")
+const searching = document.getElementById("searching");
 const btnsAdd = document.querySelectorAll(".btn-add");
 let userId = JSON.parse(localStorage.getItem("userId")) || 0;
 let workers = JSON.parse(localStorage.getItem("workers")) || [];
@@ -28,25 +28,29 @@ uploadImage.onchange = () => {
   profile.src = workerProfile;
 };
 
-searching.addEventListener("input" , (e)=>{
-  const value = e.target.value.toLowerCase().trim()
-  let result = workers.filter((el)=> el.role.toLowerCase().includes(value) || el.firstname.toLowerCase().includes(value)  )
+searching.addEventListener("input", (e) => {
+  const value = e.target.value.toLowerCase().trim();
+  let result = workers.filter(
+    (el) =>
+      el.role.toLowerCase().includes(value) ||
+      el.firstname.toLowerCase().includes(value)
+  );
 
-  if(value === ""){
-    displayWorkewrs()
+  if (value === "") {
+    displayWorkewrs();
   }
 
-if(result.length === 0 && value !== ""){
-     workersContainer.innerHTML = `
+  if (result.length === 0 && value !== "") {
+    workersContainer.innerHTML = `
        <div
                               class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
                               <img src="/images/empty.png" alt="empty">
                           </div>`;
-}
-  workersContainer.innerHTML =""
+  }
+  workersContainer.innerHTML = "";
 
-  result.forEach((el)=>{
-workersContainer.innerHTML += `
+  result.forEach((el) => {
+    workersContainer.innerHTML += `
      <div class="flex items-center  relative gap-4 px-3 h-16 lg:h-20 border border-gray-100 rounded-md ring-1 ring-gray-50 inset-shadow-2xs">
                             <div class="bg-blue-50 rounded-full p">
                                 <img class="h-12 w-12 rounded-full"
@@ -75,33 +79,28 @@ workersContainer.innerHTML += `
                         </div>
     
     `;
-  })  
+  });
 
   console.log(result.length);
-  
-  if(result.length > 0){
-result.forEach((el)=>{
-  const opnProfile = document.getElementById(`profile-${el.id}`);
-  const pst = document.getElementById(`post-${el.id}`);
 
-  opnProfile.addEventListener('click' , ()=>{
-    resultSearch(el)
-  })
-  
- pst.addEventListener('click' , ()=>{
-  console.log("vzxcvzxvxz");
-  console.log(el);
-  
-   workersPosts(el);
-  })
+  if (result.length > 0) {
+    result.forEach((el) => {
+      const opnProfile = document.getElementById(`profile-${el.id}`);
+      const pst = document.getElementById(`post-${el.id}`);
 
+      opnProfile.addEventListener("click", () => {
+        resultSearch(el);
+      });
 
-})
+      pst.addEventListener("click", () => {
+        console.log("vzxcvzxvxz");
+        console.log(el);
 
+        workersPosts(el);
+      });
+    });
   }
-
-})
-
+});
 
 const spaces = [
   "conference",
@@ -153,38 +152,35 @@ form.addEventListener("submit", (event) => {
       const startValue = date_start.value.trim();
       const endValue = date_end.value.trim();
       const today = new Date();
-      const selectDate = new Date(startValue);
+      const startDate = new Date(startValue);
+      const endDate = new Date(endValue);
 
-      if ((date_start && startValue === "") || selectDate < today) {
+      if (startValue === "" || startDate > today) {
         document.getElementById("checkFr").classList.remove("hidden");
         isValid = false;
       } else {
         document.getElementById("checkFr").classList.add("hidden");
-      
       }
 
-      if (endValue === " " || endValue < startValue) {
+      if (endValue === "" || (endDate < startDate && endDate > today)) {
         document.getElementById("checkTo").classList.remove("hidden");
         isValid = false;
       } else {
         document.getElementById("checkTo").classList.add("hidden");
-      
       }
 
-      if (company && company.value.length < 3) {
+      if (!/^[A-Za-z ]{3,25}$/.test(company.value)) {
         document.getElementById("checkCp").classList.remove("hidden");
         isValid = false;
       } else {
         document.getElementById("checkCp").classList.add("hidden");
-     
       }
 
-      if (job && job.value.length < 3) {
+      if (!/^[A-Za-z ]{3,25}$/.test(job.value)) {
         document.getElementById("checkJb").classList.remove("hidden");
         isValid = false;
       } else {
         document.getElementById("checkJb").classList.add("hidden");
-  
       }
     }
 
@@ -249,13 +245,10 @@ function validationFirstForm() {
   const checkEm = document.getElementById("checkEm");
   const checkNmr = document.getElementById("checkNmr");
 
-  const ValidNumber =
-    /^(06|07|05)/.test(number.value) &&
-    /^\d+$/.test(number.value) &&
-    number.value.length === 10;
-  const ValidEmail = email.value.includes("@gmail.com");
-  const ValidFirstName = firstname.value.length >= 3;
-  const ValidlastName = lastname.value.length >= 3;
+  const ValidNumber = /^(06|07|05)\d{8}$/.test(number.value);
+  const ValidEmail = /^[\w.-]+@[\w.-]+\.\w+$/.test(email.value);
+  const ValidFirstName = /^[A-Za-z ]{3,25}$/.test(firstname.value);
+  const ValidlastName = /^[A-Za-z ]{3,25}$/.test(lastname.value);
 
   if (ValidFirstName) {
     checkFn.classList.add("hidden");
@@ -305,18 +298,19 @@ This field is required</p>
     </label>
       <label class="flex flex-col w-full mb-4" for="date">
        <p class="text-gray-600 mb-2">From*</p> 
-        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date_start">
-        <p id="checkFr" class="text-red-500 text-[.6rem] hidden">
-This field is required</p>
-
-    </label>
-          <label class="flex flex-col w-full mb-4" for="date">
-       <p class="text-gray-600 mb-2">To*</p> 
         <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date_end">
         <p id="checkTo" class="text-red-500 text-[.6rem] hidden">
 This field is required</p>
 
     </label>
+      <label class="flex flex-col w-full mb-4" for="date">
+       <p class="text-gray-600 mb-2">To*</p> 
+        <input class="bg-gray-100 h-10 pl-2 rounded-md mb-1 border border-gray-400 outline-none" type="date" id="date_start">
+        <p id="checkFr" class="text-red-500 text-[.6rem] hidden">
+This field is required</p>
+
+    </label>
+        
     `;
   addExperience.disabled = true;
   if (addExperience.disabled) {
@@ -364,9 +358,9 @@ function displayWorkewrs() {
   });
 }
 
-function resultSearch(el){
-console.log(el);
-      document.getElementById("worker-profile").innerHTML = `
+function resultSearch(el) {
+  console.log(el);
+  document.getElementById("worker-profile").innerHTML = `
 
 <section id="prfl" class="relative animation bg-white w-full max-w-[95%] lg:w-[50%] h-[90vh]  rounded-xl overflow-auto  ">
             <div id="closeProfile" class="absolute right-6 top-4 cursor-pointer text-gray-500 text-[1.3rem] ">&#x2716;</div>
@@ -413,37 +407,37 @@ console.log(el);
         </section>
 
 `;
-document.getElementById("worker-profile").classList.remove("hdn");
-closeProfile()
-  removeProfile(el)
+  document.getElementById("worker-profile").classList.remove("hdn");
+  closeProfile();
+  removeProfile(el);
 }
-function closeProfile(){
-      const closeProfile = document.getElementById("closeProfile");
-      if (closeProfile) {
-        closeProfile.addEventListener("click", () => {
-          document.getElementById("prfl").classList.add("animationHidden");
-          document.getElementById("prfl").classList.remove("animation");
-          setTimeout(() => {
-            document.getElementById("worker-profile").classList.add("hdn");
-          }, 250);
-        });
-      }
-}
-function removeProfile(el){
-        const removeBtn = document.getElementById(`remove-${el.id}`);
-      removeBtn.addEventListener("click", () => {
-        workers = workers.filter((item) => item.id !== el.id);
-        localStorage.setItem("workers", JSON.stringify(workers));        
-        localStorage.setItem("userId", JSON.stringify(userId-1));
-        displayWorkewrs();
+function closeProfile() {
+  const closeProfile = document.getElementById("closeProfile");
+  if (closeProfile) {
+    closeProfile.addEventListener("click", () => {
+      document.getElementById("prfl").classList.add("animationHidden");
+      document.getElementById("prfl").classList.remove("animation");
+      setTimeout(() => {
         document.getElementById("worker-profile").classList.add("hdn");
-        if (workers.length < 1) {
-          workersContainer.innerHTML = `  <div
+      }, 250);
+    });
+  }
+}
+function removeProfile(el) {
+  const removeBtn = document.getElementById(`remove-${el.id}`);
+  removeBtn.addEventListener("click", () => {
+    workers = workers.filter((item) => item.id !== el.id);
+    localStorage.setItem("workers", JSON.stringify(workers));
+    localStorage.setItem("userId", JSON.stringify(userId - 1));
+    displayWorkewrs();
+    document.getElementById("worker-profile").classList.add("hdn");
+    if (workers.length < 1) {
+      workersContainer.innerHTML = `  <div
         class="w-full h-72 lg:h-[32rem]  flex items-center justify-center">
         <img src="/images/empty.png" alt="empty">
         </div>`;
-        }
-      });
+    }
+  });
 }
 function openProfile() {
   workers.forEach((el) => {
@@ -497,17 +491,18 @@ function openProfile() {
         </section>
 
 `;
-  closeProfile()
-  removeProfile(el)
+      closeProfile();
+      removeProfile(el);
     });
   });
 }
 
 function checkPost(el) {
   console.log("sdfsafdassadsadasdasdas");
-  
+
   const postBtn = document.getElementById(`post-${el.id}`);
-  postBtn.addEventListener("click", () => {
+  postBtn.addEventListener("click", (e) => {
+    // e.stopPropagation()
     workersPosts(el);
   });
 }
@@ -519,7 +514,6 @@ function checkPostDiv(el) {
   removeCardBtn.addEventListener("click", (e) => {
     e.stopPropagation();
 
-    
     removeCardFromSalles(el, "list");
     workerPost.classList.add("hdn");
   });
@@ -672,7 +666,9 @@ function postsConference() {
      <div id="div-worker${
        el.id
      }" class="bg-white flex items-center relative gap-1 p-1 rounded-md cursor-pointer ">
-      <div id="remove-${el.id}" class=" absolute right-2 top-1 cursor-pointer text-gray-500 z-50  ">&#x2716;</div>
+      <div id="remove-${
+        el.id
+      }" class=" absolute right-2 top-1 cursor-pointer text-gray-500 z-50  ">&#x2716;</div>
                                 <img src=${
                                   el.image !== undefined
                                     ? el.image
@@ -1062,23 +1058,20 @@ function postWorkersByProfile(space) {
       if (isExist) {
         removeCardFromSalles(el, space);
         copyWorkers = copyWorkers.filter((it) => it.id !== el.id);
- 
 
         postWorkersByProfile(space);
       }
     });
   });
 
-copyWorkers.forEach((el)=>{
-  const opnProfileCp = document.getElementById(`profile-${el.id}-cp`);
-  opnProfileCp.addEventListener('click' , ()=>{
-    console.log("fdsfdsf");
-    resultSearch(el)
-  })
-
-})
-
-  
+  copyWorkers.forEach((el) => {
+    const opnProfileCp = document.getElementById(`profile-${el.id}-cp`);
+    opnProfileCp.addEventListener("click", (e) => {
+      // e.stopPropagation()
+      console.log("fdsfdsf");
+      resultSearch(el);
+    });
+  });
 }
 
 function canAddToSalle(salleArray) {
@@ -1087,10 +1080,10 @@ function canAddToSalle(salleArray) {
 }
 
 function removeCardFromSalles(el, salle) {
-  if (salle !== "conference" ) {
+  if (salle !== "conference") {
     posts_conference = posts_conference.filter((rm) => rm.id !== el.id);
   }
-  if (salle !== "reception" ) {
+  if (salle !== "reception") {
     posts_reception = posts_reception.filter((rm) => rm.id !== el.id);
   }
   if (salle !== "serveurs") {
@@ -1107,7 +1100,6 @@ function removeCardFromSalles(el, salle) {
   }
   if (salle !== "list") {
     workers = workers.filter((ls) => ls.id !== el.id);
-    
   }
 
   switch (salle) {
@@ -1125,7 +1117,6 @@ function removeCardFromSalles(el, salle) {
         canAddToSalle(posts_reception)
       ) {
         posts_reception.push(el);
-    
       }
       break;
     case "serveurs":
